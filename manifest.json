@@ -1,0 +1,26 @@
+{
+	"name" : "Rottentomatoes information in Trakt.tv",
+	"short_name" : "Traktatoes",
+	"version" : "0.5",
+	"description" : "This extension shows Rotten Tomatoes Fresh/Rotten score in trakt.tv",
+	"permissions": [
+		"http://www.rottentomatoes.com/*",
+		"http://rtapi.anacrolix.link/*",
+    "http://www.omdbapi.com/*",
+    "http://www.omdbapi.com/?tomatoes=true&i=tt*"
+	],
+	"content_scripts": [{
+			"matches": [
+				"https://trakt.tv/*",
+				"http://trakt.tv/*"
+			],
+      "css": ["rottenTomatoesStyle.css"],
+			"js" : ["script.js", "deps/jquery-3.1.1.min.js"],
+      "run_at": "document_start"
+		}],
+  "background":{
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+	"manifest_version" : 2
+}
