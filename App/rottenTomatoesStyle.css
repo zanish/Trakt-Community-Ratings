@@ -1,9 +1,43 @@
 #rottenTomatoesResults {
 		background-color: #FEF7CD;
-		border: 1px solid #dddddd;
 		min-height: 1px;
 		float: left;
 		display: block;
 		width: 100%;
 		margin-bottom: 10px;
 	};
+
+.scorePanel {
+
+}
+
+.tmeterPanel {
+	border-right: solid #E0D695 1px;
+	width: 66.6%;
+}
+
+.tomatoLink {
+	color: black;
+}
+
+.scoreSpan {
+	box-sizing: : border-box;
+	font-size: 36px;
+	font-weight: bold;
+	color: black;
+}
+
+.statsPanel {
+	display: black;
+	font-size: 12px;
+	color: black;
+}
+
+.statsSpan {
+
+}
+
+.tabbedStatsSpan {
+	margin-left: 10px;
+	padding-bottom: 10px;
+}

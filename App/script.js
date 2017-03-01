@@ -9,18 +9,6 @@ function getRTFromImdbId() {
   var insertSelector = "div.affiliate-links";
   var labelHtml = 'Rotten Tomatoes:';
 
-  if ($('table.probody').length > 0) {
-    insertSelector = "table.probody";
-  }
-
-  if ($('#tn15').length > 0) {
-    insertSelector = "div.info:first";
-  }
-
-  if ($('.plot_summary_wrapper').length > 0) {
-    insertSelector = ".plot_summary_wrapper";
-  }
-
   var rottenTomatoesResults = $('<div/>').
     attr('id', "rottenTomatoesResults").
     html("Checking Rotten Tomatoes... ");
@@ -53,19 +41,74 @@ function parseValidResponse(response) {
 	var rottenResults = $('#rottenTomatoesResults');
 
 	// add tomato-meter score and icon
-	var tomatoMeterScoreImage = '';
-	if (response.tomatoMeter == 'N/A') {
-		tomatoMeterScoreText = 'No Score Yet...';
-		tomatoMeterScoreClass = ' noScore';
-	} else {
-		tomatoMeterScoreClass = '';
-		tomatoMeterScoreText = response.tomatoMeter + '%';
+	var scorePanel = null;
+  var scoreText = "";
 
-		tomatoMeterScoreImage = $('<div/>').
-			attr('class', 'rtIcon ' + response.tomatoImage).
-			attr('title', response.tomatoImage + ' - ' + tomatoMeterScoreText);
+	if (response.tomatoMeter == 'N/A') {
+		scoreText = 'No Score Yet...';
+	} else {
+		scoreText = response.tomatoMeter + '%';
+
+		scorePanel = $('<div/>')
+			.attr('class', 'scorePanel')
+      .attr('class', 'col-sm-16')
+      .attr('class', 'col-xs-12');
+
+    var tmeterPanel = $('<div/>')
+      .attr('class', 'tmeterPanel');
+
+    var scoreSpan = $('<span/>')
+      .attr('class', "scoreSpan")
+      .text(scoreText);
+
+    var tomatoLink = $('<a/>')
+      .attr('href', response.tomatoURL)
+      .attr('class', 'tomatoLink')
+      .append(scoreSpan);
+
+    tmeterPanel.append(tomatoLink);
 	}
 
+  var statsPanel = $('<div/>')
+    .attr('class', 'statsPanel');
+
+  if(response.tomatoRating !== 'N/A') {
+    var avgRating = $('<span/>')
+      .attr('class', 'statsSpan')
+      .text("Average Rating: " + response.tomatoRating + "/10");
+
+    statsPanel.append($('<div/>').append(avgRating));
+  }
+
+  if(response.tomatoReviews !== 'N/A') {
+    var numReviews = $('<span/>')
+      .attr('class', 'statsSpan')
+      .text("Reviews Counted: " + response.tomatoReviews);
+
+    statsPanel.append($('<div/>').append(numReviews));
+  }
+
+  if(response.tomatoFresh !== 'N/A') {
+    var numFresh = $('<span/>')
+      .attr('class', 'tabbedStatsSpan')
+      .text("Fresh: " + response.tomatoFresh);
+
+    statsPanel.append($('<div/>').append(numFresh));
+  }
+
+  if(response.tomatoRotten !== 'N/A') {
+    var numRotten = $('<span/>')
+      .attr('class', 'tabbedStatsSpan')
+      .text("Rotten: " + response.tomatoRotten);
+
+    statsPanel.append($('<div/>').append(numRotten));
+  }
+
+  tmeterPanel.append(statsPanel);
+
+    scorePanel.append(tmeterPanel);
+    rottenResults.append(scorePanel);
+/*
 	var tomatoMeterScore = $('<span/>').
 		attr('id', 'rottenTomatoesTomatoMeterScore').
 		text(tomatoMeterScoreText);
@@ -112,6 +155,7 @@ function parseValidResponse(response) {
 				append(audienceScoreImage).
 				append(audienceRatingText)
 		);
+
 	}
 
 	if (showAverageRating) {
@@ -178,6 +222,7 @@ function parseValidResponse(response) {
 			addClass("rottenClear").
 			html("&nbsp;")
 	);
+  */
 }
 
 function getIMDBid () {
