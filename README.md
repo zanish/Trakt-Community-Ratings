@@ -2,16 +2,16 @@
 
 This project aims to bring together Rotten Tomatoes, IMDB, and Trakt.tv. The extension will provide ratings and information from both sites while browsing trakt.
 
-##Images
+## Images
 Coming soon!
 
-##Future Plan
+## Future Plan
 This plug-in only provides Rotten Tomatoes information currently. Once that is working fully then add IMDB.
 
-##Issues
+## Issues
 Please report all issues [Here](https://github.com/zanish/Trakt-Community-Ratings/issues) and I will attempt to fix them as soon as possible. If possible please attack an image or provide detailed steps in creating and recreating the issue, thank you.
 
-##Help
+## Help
 If you'd like to contribute or use my code just ask or fork. If you like the extension and would like to support me please consider donating below.
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 <input type="hidden" name="cmd" value="_s-xclick">
