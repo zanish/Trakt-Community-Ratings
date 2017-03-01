@@ -1,0 +1,9 @@
+#rottenTomatoesResults {
+		background-color: #FEF7CD;
+		border: 1px solid #dddddd;
+		min-height: 1px;
+		float: left;
+		display: block;
+		width: 100%;
+		margin-bottom: 10px;
+	};

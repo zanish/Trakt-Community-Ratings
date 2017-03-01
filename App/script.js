@@ -6,7 +6,7 @@ document.addEventListener("turbolinks:render", function(){
 })
 
 function getRTFromImdbId() {
-  var insertSelector = "div#huckster-desktop-wrapper";
+  var insertSelector = "div.affiliate-links";
   var labelHtml = 'Rotten Tomatoes:';
 
   if ($('table.probody').length > 0) {
@@ -25,12 +25,14 @@ function getRTFromImdbId() {
     attr('id', "rottenTomatoesResults").
     html("Checking Rotten Tomatoes... ");
     //append(spinnerGif);
-  $(insertSelector).append(rottenTomatoesResults);
+  $(insertSelector).prepend(rottenTomatoesResults);
 
-  var apiUrl = 'http://www.omdbapi.com/?tomatoes=true&i=tt'+getIMDBid();
+  var apiUri = 'http://www.omdbapi.com/?tomatoes=true&i=tt';
+  var apiParams = getIMDBid();
 
-  if(apiUrl != null)
+  if(apiUri != null)
   {
+    var apiUrl = apiUri + apiParams;
     chrome.runtime.sendMessage({
       method: 'GET',
       action: 'xhttp',
