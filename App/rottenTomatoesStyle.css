@@ -22,6 +22,7 @@
 
 .tomatoLink {
 	color: black;
+	font-size: 36px;
 }
 
 .scoreSpan {
@@ -29,12 +30,15 @@
 	font-size: 36px;
 	font-weight: bold;
 	color: black;
+	margin-bottom: 15px;
+	margin-left: 10px;
 }
 
 .statsPanel {
 	display: black;
 	font-size: 12px;
 	color: black;
+	margin-top: 10px;
 }
 
 .criticPanel {
@@ -65,4 +69,40 @@
 	float: right;
 	margin-top: 10px;
 	padding-left: 10px;
+	font-size: 12px;
+}
+
+.rtIcon {
+	display: inline-block;
+	vertical-align: bottom;;
+}
+
+.rtIcon.certFresh {
+	background: url('https://staticv2-4.rottentomatoes.com/static/images/redesign/icons-v2.png') no-repeat -194px -96px;
+	width: 47px;
+	height: 48px;
+}
+
+.rtIcon.fresh {
+	background: url('https://staticv2-4.rottentomatoes.com/static/images/redesign/icons-v2.png') no-repeat -194px -48px;
+	width: 48px;
+	height: 48px;
+}
+
+.rtIcon.rotten {
+	background: url('https://staticv2-4.rottentomatoes.com/static/images/redesign/icons-v2.png') no-repeat -241px -97px;
+	width: 47px;
+	height: 45px;
+}
+
+.rtIcon.popcorn {
+	background: url('https://staticv2-4.rottentomatoes.com/static/images/redesign/icons-v2.png') no-repeat -246px -48px;
+	width: 40px;
+	height: 48px;
+}
+
+.rtIcon.tipped {
+	background: url('https://staticv2-4.rottentomatoes.com/static/images/redesign/icons-v2.png') no-repeat -196px -10px;
+	width: 40px;
+	height: 35px;
 }

@@ -3,6 +3,9 @@ document.addEventListener("turbolinks:render", function(){
   //TODO: check the url
   //TODO: if movie get the info
   getRTFromImdbId();
+});
+document.addEventListener("pageload", function(){
+  getRTFromImdbId();
 })
 
 function getRTFromImdbId() {
@@ -65,16 +68,35 @@ function parseValidResponse(response) {
   var audienceSpan = $('<span/>')
     .attr('class', 'scoreSpan');
   var audienceStats = $('<div/>')
-    .attr('class', statsPanel);
+    .attr('class', 'statsPanel');
+  var scoreWrapperDiv = $('<div/>')
+    .addClass('rtIcon');
+  var iconDiv = $('<div/>')
+    .addClass('rtIcon');
+  var audienceWrapperDiv = $('<div/>')
+    .addClass('rtIcon');
+  var popcornDiv = $('<div/>')
+    .addClass('rtIcon');
 
 	if (response.tomatoMeter == 'N/A') {
 		scoreText = 'No Score Yet...';
 	} else {
 		scoreText = response.tomatoMeter + '%';
 
+    if(response.tomatoImage === "certified")
+      iconDiv.addClass('certFresh');
+    else if(response.tomatoImage === 'fresh')
+      iconDiv.addClass('fresh');
+    else if(response.tomatoImage === 'rotten')
+      iconDiv.addClass('rotten');
+
     scoreSpan.text(scoreText);
     tomatoLink.append(scoreSpan);
-    numberPanel.append(tomatoLink);
+
+    scoreWrapperDiv.append(iconDiv);
+    scoreWrapperDiv.append(tomatoLink);
+
+    numberPanel.append(scoreWrapperDiv);
 	}
 
   if(response.tomatoRating !== 'N/A') {
@@ -120,15 +142,32 @@ function parseValidResponse(response) {
   if(response.tomatoUserMeter !== 'N/A') {
     audienceSpan.text(response.tomatoUserMeter + "%");
 
-    audiencePanel.append(audienceSpan);
+    if(response.tomatoUserRating > 3.5) {
+      popcornDiv.addClass('popcorn');
+    }
+    else {
+      popcornDiv.addClass('tipped');
+    }
+
+    audienceWrapperDiv.append(popcornDiv);
+    audienceWrapperDiv.append(audienceSpan);
+    audiencePanel.append(audienceWrapperDiv);
   }
 
   if(response.tomatoUserRating !== 'N/A') {
     var audienceRating = $('<span/>')
       .attr('class', 'statsSpan')
-      .text("Avg. User Rating: " + response.tomatoUserRating);
+      .text("Avg. User Rating: " + response.tomatoUserRating + "/5");
 
     audienceStats.append($('<div/>').append(audienceRating));
+  }
+
+  if(response.tomatoUserReviews !== 'N/A') {
+    var audienceReviews = $('<span/>')
+      .attr('class', 'statsSpan')
+      .text("User Reviews: " + response.tomatoUserReviews);
+
+    audienceStats.append($('<div/>').append(audienceReviews));
   }
 
   audiencePanel.append(audienceStats);
@@ -139,121 +178,6 @@ function parseValidResponse(response) {
   scorePanel.append(tmeterPanel);
   scorePanel.append(audiencePanel);
   rottenResults.append(scorePanel);
-/*
-	var tomatoMeterScore = $('<span/>').
-		attr('id', 'rottenTomatoesTomatoMeterScore').
-		text(tomatoMeterScoreText);
-
-	var tomatoMeter = $('<a/>').
-		attr('href', response.tomatoURL).
-		attr('id', 'rottenTomatoesTomatoMeterScore').
-		addClass('floater' + tomatoMeterScoreClass).
-		html('<p class="rt-credits">Rotten Tomatoes® Score</p>') .
-		append(tomatoMeterScoreImage) .
-		append(tomatoMeterScoreText);
-
-	rottenResults.html(tomatoMeter);
-
-	if (showAudience) {
-		var audienceRatingImageClass = 'spilled';
-		var audienceRatingText = 'Spilled';
-		var audienceRatingLabel = 'Liked It';
-		var audienceRatingText = '';
-
-		if (response.tomatoUserMeter == 'N/A') {
-			audienceRatingImageClass = 'wts';
-			audienceRatingText = 'No Audience Rating Yet';
-			audienceRatingLabel = 'Want To See It';
-		} else {
-			audienceRatingText = response.tomatoUserMeter + '%';
-
-			var userRating = parseInt(response.tomatoUserMeter);
-			if (userRating >= 60) {
-				audienceRatingImageClass = 'upright';
-			};
-		}
-
-		audienceScoreImage = $('<div/>').
-			attr('class', 'rtIcon ' + audienceRatingImageClass).
-			attr('title', audienceRatingLabel);
-
-			rottenResults.append(
-			$('<a/>').
-				attr('href', response.tomatoURL).
-				attr('id', 'rottenTomatoesAudience').
-				addClass('floater').
-				html('<p class="rt-credits">Audience</p>') .
-				append(audienceScoreImage).
-				append(audienceRatingText)
-		);
-
-	}
-
-	if (showAverageRating) {
-		averageRating = response.tomatoRating + '/10';
-		if (response.tomatoRating == 'N/A') {
-			averageRating = response.tomatoRating;
-		};
-		rottenResults.append(
-			$('<p/>').
-				attr('id', 'rottenTomatoesAverage').
-				addClass('rottenClear').
-				html('<b>Critics Average</b> : ' + averageRating)
-		);
-	}
-
-	if (showAudienceAverageRating) {
-		averageAudienceRating = response.tomatoUserRating + '/5';
-		if (response.tomatoUserRating == 'N/A') {
-			averageAudienceRating = response.tomatoUserRating;
-		};
-		rottenResults.append(
-			$('<div/>').
-				attr('id', 'rottenTomatoesAudienceAverage').
-				addClass('rottenClear').
-				html('<b>Audience Average</b> : ' + averageAudienceRating)
-		);
-	}
-
-	if (showReviewCount) {
-		reviewText = '<b>Reviews</b> : ' + response.tomatoReviews;
-		if (showFreshReviewCount || showRottenReviewCount) {
-			reviewText = reviewText + ' (';
-			if (showFreshReviewCount) {
-				reviewText = reviewText + response.tomatoFresh + '&nbsp;Fresh';
-			}
-
-			if (showRottenReviewCount) {
-				if (showFreshReviewCount) {
-					reviewText = reviewText + ', ';
-				}
-				reviewText = reviewText + response.tomatoRotten + '&nbsp;Rotten';
-			}
-			reviewText = reviewText + ')';
-		}
-
-		rottenResults.append(
-			$('<p/>').
-				attr('id', 'rottenTomatoesReviewCount').
-				html(reviewText)
-		);
-	}
-
-	if (showConsensus) {
-		rottenResults.append(
-			$('<div/>').
-				attr('id', 'rottenTomatoesConsensus').
-				addClass('rottenClear').
-				html('<b>Consensus</b> : ' + response.tomatoConsensus)
-		);
-	}
-
-	rottenResults.append(
-		$('<div/>').
-			addClass("rottenClear").
-			html("&nbsp;")
-	);
-  */
 }
 
 function getIMDBid () {
