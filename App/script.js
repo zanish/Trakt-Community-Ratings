@@ -31,6 +31,7 @@ function getRTFromImdbId() {
       if (response.hasOwnProperty('Error')) {
         rottenTomatoesResults.html('Got error from OMDB: "' + response.Error + '"');
       } else {
+        rottenTomatoesResults.html("");
         parseValidResponse(response);
       }
     });
@@ -41,36 +42,40 @@ function parseValidResponse(response) {
 	var rottenResults = $('#rottenTomatoesResults');
 
 	// add tomato-meter score and icon
-	var scorePanel = null;
   var scoreText = "";
+  var statsPanel = $('<div/>')
+    .attr('class', 'statsPanel');
+  var criticPanel = $('<div/>')
+    .attr('class', 'criticPanel');
+  var tmeterPanel = $('<div/>')
+    .attr('class', 'tmeterPanel');
+  var scoreSpan = $('<span/>')
+    .attr('class', "scoreSpan");
+  var tomatoLink = $('<a/>')
+    .attr('href', response.tomatoURL)
+    .attr('class', 'tomatoLink');
+  var scorePanel = $('<div/>')
+    .attr('class', 'scorePanel')
+    .attr('class', 'col-sm-16')
+    .attr('class', 'col-xs-12');
+  var numberPanel = $('<div/>')
+    .attr('class', 'numberPanel');
+  var audiencePanel = $('<div/>')
+    .attr('class', 'audiencePanel');
+  var audienceSpan = $('<span/>')
+    .attr('class', 'scoreSpan');
+  var audienceStats = $('<div/>')
+    .attr('class', statsPanel);
 
 	if (response.tomatoMeter == 'N/A') {
 		scoreText = 'No Score Yet...';
 	} else {
 		scoreText = response.tomatoMeter + '%';
 
-		scorePanel = $('<div/>')
-			.attr('class', 'scorePanel')
-      .attr('class', 'col-sm-16')
-      .attr('class', 'col-xs-12');
-
-    var tmeterPanel = $('<div/>')
-      .attr('class', 'tmeterPanel');
-
-    var scoreSpan = $('<span/>')
-      .attr('class', "scoreSpan")
-      .text(scoreText);
-
-    var tomatoLink = $('<a/>')
-      .attr('href', response.tomatoURL)
-      .attr('class', 'tomatoLink')
-      .append(scoreSpan);
-
-    tmeterPanel.append(tomatoLink);
+    scoreSpan.text(scoreText);
+    tomatoLink.append(scoreSpan);
+    numberPanel.append(tomatoLink);
 	}
-
-  var statsPanel = $('<div/>')
-    .attr('class', 'statsPanel');
 
   if(response.tomatoRating !== 'N/A') {
     var avgRating = $('<span/>')
@@ -104,10 +109,36 @@ function parseValidResponse(response) {
     statsPanel.append($('<div/>').append(numRotten));
   }
 
-  tmeterPanel.append(statsPanel);
+  if(response.tomatoConsensus !== 'N/A') {
+    var consensus = $('<span/>')
+      .attr('class', 'consensus')
+      .text("Consensus: " + response.tomatoConsensus);
 
-    scorePanel.append(tmeterPanel);
-    rottenResults.append(scorePanel);
+    criticPanel.append(consensus);
+  }
+
+  if(response.tomatoUserMeter !== 'N/A') {
+    audienceSpan.text(response.tomatoUserMeter + "%");
+
+    audiencePanel.append(audienceSpan);
+  }
+
+  if(response.tomatoUserRating !== 'N/A') {
+    var audienceRating = $('<span/>')
+      .attr('class', 'statsSpan')
+      .text("Avg. User Rating: " + response.tomatoUserRating);
+
+    audienceStats.append($('<div/>').append(audienceRating));
+  }
+
+  audiencePanel.append(audienceStats);
+  numberPanel.append(statsPanel);
+  tmeterPanel.append(numberPanel);
+  tmeterPanel.append(criticPanel);
+
+  scorePanel.append(tmeterPanel);
+  scorePanel.append(audiencePanel);
+  rottenResults.append(scorePanel);
 /*
 	var tomatoMeterScore = $('<span/>').
 		attr('id', 'rottenTomatoesTomatoMeterScore').
