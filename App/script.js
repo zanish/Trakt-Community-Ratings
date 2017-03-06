@@ -1,14 +1,27 @@
 document.addEventListener("turbolinks:render", function(){
-  console.log("working");
+  console.log("render");
   //TODO: check the url
   //TODO: if movie get the info
   getRTFromImdbId();
 });
-document.addEventListener("pageload", function(){
+document.addEventListener("turbolinks:load", function(){
+  console.log("load");
   getRTFromImdbId();
 })
 
 function getRTFromImdbId() {
+
+  url = window.location.href;
+  if(url.includes("shows") || url.includes("movies/trending") || url.includes("movies/popular")
+      || url.includes("movies/watched") || url.includes("movies/collected")
+      || url.includes("movies/anticipated") || url.includes("movies/anticipated")
+      || url.includes("dashboard") || url.includes("calendars") || url.includes("discover")
+      || url.includes("apps") || url.includes("vip") || url.includes("users")) {
+        console.log("skipped");
+        return;
+      }
+
+
   var insertSelector = "div.affiliate-links";
   var labelHtml = 'Rotten Tomatoes:';
 
@@ -39,6 +52,7 @@ function getRTFromImdbId() {
       }
     });
   }
+  running = false;
 }
 
 function parseValidResponse(response) {
@@ -80,6 +94,10 @@ function parseValidResponse(response) {
 
 	if (response.tomatoMeter == 'N/A') {
 		scoreText = 'No Score Yet...';
+    scoreSpan.text(scoreText);
+    tomatoLink.append(scoreSpan);
+    scoreWrapperDiv.append(tomatoLink);
+    numberPanel.append(scoreWrapperDiv);
 	} else {
 		scoreText = response.tomatoMeter + '%';
 
