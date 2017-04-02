@@ -42,17 +42,39 @@ function getRTFromImdbId() {
       action: 'xhttp',
       url: apiUrl,
     }, function(response){
-      console.log(response);
+      console.log("OMDB: " + response);
       response = JSON.parse(response);
       if (response.hasOwnProperty('Error')) {
         rottenTomatoesResults.html('Got error from OMDB: "' + response.Error + '"');
       } else {
-        rottenTomatoesResults.html("");
-        parseValidResponse(response);
+        if(response.tomatoURL !== "N/A") {
+          //TODO: make ajax call
+          console.log("call RT");
+          chrome.runtime.sendMessage({
+            method: 'GET',
+            action: 'ajax',
+            url: response.tomatoURL,
+          },function(response2) {
+            console.log("in func");
+            parseValidResponse(formatResponse(response2));
+          });
+          //TODO: format a response object
+        }
+        else {
+          //TODO: find better check
+          rottenTomatoesResults.html("");
+          parseValidResponse(response);
+        }
       }
     });
   }
   running = false;
+}
+
+function formatResponse(RTresponse) {
+  console.log("RT: " + JSON.stringify(RTresponse, null, 4));
+  response = {};
+  return RTresponse;
 }
 
 function parseValidResponse(response) {

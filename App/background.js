@@ -18,4 +18,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, callback) {
         xhttp.send(request.data);
         return true; // prevents the callback from being called too early on return
     }
+    else {
+      //TODO: fix this with xhttp or other solution
+      $.ajax({
+        method: request.method,
+        url: request.url,
+        asyn: false
+      }).done(callback(response));
+      return true;
+    }
 });
