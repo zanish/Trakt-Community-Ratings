@@ -4,7 +4,7 @@
 	"version" : "0.5",
 	"description" : "This extension shows Rotten Tomatoes Fresh/Rotten score in trakt.tv",
 	"permissions": [
-		"http://www.rottentomatoes.com/*",
+		"https://www.rottentomatoes.com/*",
 		"http://rtapi.anacrolix.link/*",
     "http://www.omdbapi.com/*",
     "http://www.omdbapi.com/?tomatoes=true&i=tt*"

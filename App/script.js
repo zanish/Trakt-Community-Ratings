@@ -41,40 +41,41 @@ function getRTFromImdbId() {
       method: 'GET',
       action: 'xhttp',
       url: apiUrl,
-    }, function(response){
-      console.log("OMDB: " + response);
-      response = JSON.parse(response);
-      if (response.hasOwnProperty('Error')) {
-        rottenTomatoesResults.html('Got error from OMDB: "' + response.Error + '"');
-      } else {
-        if(response.tomatoURL !== "N/A") {
-          //TODO: make ajax call
-          console.log("call RT");
-          chrome.runtime.sendMessage({
-            method: 'GET',
-            action: 'ajax',
-            url: response.tomatoURL,
-          },function(response2) {
-            console.log("in func");
-            parseValidResponse(formatResponse(response2));
-          });
-          //TODO: format a response object
-        }
-        else {
-          //TODO: find better check
-          rottenTomatoesResults.html("");
-          parseValidResponse(response);
-        }
-      }
-    });
+    },parseOMDB);
   }
-  running = false;
+}
+
+function parseOMDB(OMResponse) {
+  var rottenTomatoesResults = $('#rottenTomatoesResults');
+  console.log("OMDB: " + OMResponse);
+  OMResponse = JSON.parse(OMResponse);
+  if (OMResponse.hasOwnProperty('Error')) {
+    rottenTomatoesResults.html('Got error from OMDB: "' + OMResponse.Error + '"');
+  } else {
+    if(OMResponse.tomatoURL !== "N/A") {
+      //TODO: make ajax call
+      OMResponse.tomatoURL = OMResponse.tomatoURL.replace(/^http:\/\//i, 'https://');
+      console.log("call RT");
+      chrome.runtime.sendMessage({
+        method: 'GET',
+        action: 'ajax',
+        url: OMResponse.tomatoURL,
+      },formatResponse);
+    } else {
+      //TODO: find better check
+      rottenTomatoesResults.html("");
+      parseValidResponse(OMResponse);
+    }
+  }
 }
 
 function formatResponse(RTresponse) {
-  console.log("RT: " + JSON.stringify(RTresponse, null, 4));
+  //TODO: format a response object
+  console.log("RT: " + RTresponse);
   response = {};
-  return RTresponse;
+  response.tomatoMeter = $(RTresponse).find('#tomato_meter_link span.meter-value span').html();
+  console.log(imageClassStr);
+  console.log(response);
 }
 
 function parseValidResponse(response) {
