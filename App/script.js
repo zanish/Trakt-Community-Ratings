@@ -74,6 +74,7 @@ function formatResponse(RTresponse) {
   console.log("RT: " + RTresponse);
   response = {};
   response.tomatoMeter = $(RTresponse).find('#tomato_meter_link span.meter-value span').html();
+  let imageClassStr = $(RTresponse).find('#tomato_meter_link').children();
   console.log(imageClassStr);
   console.log(response);
 }
