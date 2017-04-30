@@ -1,14 +1,32 @@
-document.addEventListener("turbolinks:render", function(){
-  console.log("render");
-  //TODO: check the url
-  //TODO: if movie get the info
-  getRTFromImdbId();
-});
-document.addEventListener("turbolinks:load", function(){
-  console.log("load");
-  getRTFromImdbId();
+//I'm lazy and don't want to find a proper way to pass this right now.
+var tomatoeUrl = "";
+//Jquery was being called before it was loaded so waiting till DOM content is done to bind the listener
+document.addEventListener("DOMContentLoaded", function(){
+  //Trakt uses turbolinks so we want to get render and load to cover the page being loaded directly
+  //and also it being navigated to. Debounce to stop loading 2 panels
+  $(document).on('turbolinks:render turbolinks:load', debounce(getRTFromImdbId, 500, true));
 })
 
+// Returns a function, that, as long as it continues to be invoked, will not
+// be triggered. The function will be called after it stops being called for
+// N milliseconds. If `immediate` is passed, trigger the function on the
+// leading edge, instead of the trailing.
+function debounce(func, wait, immediate) {
+    var timeout;
+    return function() {
+        var context = this, args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+    };
+};
+
+//Validates a movie url and tries to get the OMDB data and RT data
 function getRTFromImdbId() {
 
   url = window.location.href;
@@ -17,7 +35,6 @@ function getRTFromImdbId() {
       || url.includes("movies/anticipated") || url.includes("movies/anticipated")
       || url.includes("dashboard") || url.includes("calendars") || url.includes("discover")
       || url.includes("apps") || url.includes("vip") || url.includes("users")) {
-        console.log("skipped");
         return;
       }
 
@@ -45,17 +62,17 @@ function getRTFromImdbId() {
   }
 }
 
+//Load data from omdb and use it to get the RT data
 function parseOMDB(OMResponse) {
   var rottenTomatoesResults = $('#rottenTomatoesResults');
-  console.log("OMDB: " + OMResponse);
   OMResponse = JSON.parse(OMResponse);
   if (OMResponse.hasOwnProperty('Error')) {
     rottenTomatoesResults.html('Got error from OMDB: "' + OMResponse.Error + '"');
   } else {
     if(OMResponse.tomatoURL !== "N/A") {
-      //TODO: make ajax call
+      rottenTomatoesResults.html("");
       OMResponse.tomatoURL = OMResponse.tomatoURL.replace(/^http:\/\//i, 'https://');
-      console.log("call RT");
+      tomatoeUrl = OMResponse.tomatoURL;
       chrome.runtime.sendMessage({
         method: 'GET',
         action: 'ajax',
@@ -63,22 +80,56 @@ function parseOMDB(OMResponse) {
       },formatResponse);
     } else {
       //TODO: find better check
+      tomatoeUrl = OMResponse.tomatoeUrl;
       rottenTomatoesResults.html("");
       parseValidResponse(OMResponse);
     }
   }
 }
 
+//Extracts the data from the RT page
 function formatResponse(RTresponse) {
-  //TODO: format a response object
-  console.log("RT: " + RTresponse);
   response = {};
-  response.tomatoMeter = $(RTresponse).find('#tomato_meter_link span.meter-value span').html();
-  let imageClassStr = $(RTresponse).find('#tomato_meter_link').children();
-  console.log(imageClassStr);
-  console.log(response);
+  console.log(tomatoeUrl);
+  response.tomatoMeter = $(RTresponse).find('div.critic-score #tomato_meter_link span.meter-value span').html();
+  let imageClassStr = $(RTresponse).find('div.critic-score #tomato_meter_link span.meter-tomato')[0].classList;
+  if(imageClassStr.contains("certified_fresh")) {
+    response.tomatoImage = "certified";
+  } else if (imageClassStr.contains('rotten')) {
+    response.tomatoImage = "rotten";
+  } else if (imageClassStr.contains('fresh')) {
+    response.tomatoImage = "fresh";
+  }
+
+  let averageRating = $(RTresponse).find('div#all-critics-numbers div#scoreStats').children()[0];
+  $(averageRating).find('span').remove();
+  response.tomatoRating = parseFloat($(averageRating).text());
+  let reviewCount = $(RTresponse).find('div#all-critics-numbers div#scoreStats').children()[1];
+  response.tomatoReviews = $($(reviewCount).find('span')[1]).text().trim();
+  let freshCount = $(RTresponse).find('div#all-critics-numbers div#scoreStats').children()[2];
+  response.tomatoFresh = $($(freshCount).find('span')[1]).text().trim();
+  let rottenCount = $(RTresponse).find('div#all-critics-numbers div#scoreStats').children()[3];
+  response.tomatoRotten = $($(rottenCount).find('span')[1]).text().trim();
+
+  let consensus = $(RTresponse).find("div#all-critics-numbers p.critic_consensus");
+  $(consensus).find('span').remove();
+  response.tomatoConsensus = $(consensus).text().trim();
+
+  let userMeter = $(RTresponse).find("div#scorePanel div.audience-score div.meter-value span");
+  response.tomatoUserMeter = parseInt($(userMeter).text());
+
+  let userRating = $(RTresponse).find('div#scorePanel div.audience-info').children()[0];
+  $(userRating).find('span').remove();
+  response.tomatoUserRating = parseFloat($(userRating).text());
+
+  let userReviews = $(RTresponse).find('div#scorePanel div.audience-info').children()[1];
+  $(userReviews).find('span').remove();
+  response.tomatoUserReviews = $(userReviews).text().trim();
+
+  parseValidResponse(response);
 }
 
+//Adds the data to the panel
 function parseValidResponse(response) {
 	var rottenResults = $('#rottenTomatoesResults');
 
@@ -93,7 +144,7 @@ function parseValidResponse(response) {
   var scoreSpan = $('<span/>')
     .attr('class', "scoreSpan");
   var tomatoLink = $('<a/>')
-    .attr('href', response.tomatoURL)
+    .attr('href', tomatoeUrl)
     .attr('class', 'tomatoLink');
   var scorePanel = $('<div/>')
     .attr('class', 'scorePanel')
@@ -222,6 +273,7 @@ function parseValidResponse(response) {
   rottenResults.append(scorePanel);
 }
 
+//gets the imdb number used for OMDB lookup
 function getIMDBid () {
 	var regexImdbNum = /\/title\/tt(\d{7})/;
 	id = regexImdbNum.exec(document.getElementsByTagName('html')[0].innerHTML);
