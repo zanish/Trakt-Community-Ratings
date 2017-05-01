@@ -3,6 +3,9 @@
 	"short_name" : "Traktatoes",
 	"version" : "0.5",
 	"description" : "This extension shows Rotten Tomatoes Fresh/Rotten score in trakt.tv",
+	"icons": {
+		"128": "icon_128.png"
+	},
 	"permissions": [
 		"https://www.rottentomatoes.com/*",
 		"http://rtapi.anacrolix.link/*",

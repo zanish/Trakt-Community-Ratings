@@ -20,3 +20,7 @@ If you'd like to contribute or use my code just ask or fork. If you like the ext
 <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
 <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
 </form>
+
+## Credit and Licenses
+I do not own nor am affiliated with Rotten Tomatoes, Flixter, or Trakt.tv, I simply wrote the extension. Any images, copyrights, trademarks, and/or patents are owned by them and used here as non-commercial fair-use.
+<div>Icons made by <a href="http://www.flaticon.com/authors/dimi-kazak" title="Dimi Kazak">Dimi Kazak</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
