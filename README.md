@@ -6,7 +6,7 @@ This project aims to bring together Rotten Tomatoes, IMDB, and Trakt.tv. The ext
 Coming soon!
 
 ## Future Plan
-This plug-in only provides Rotten Tomatoes information currently. Once that is working fully then add IMDB.
+This plug-in only provides Rotten Tomatoes information currently. Once that is working fully then add IMDB. I'd also like to implement a view for trending pages as well as a tv equivalent.
 
 ## Issues
 Please report all issues [Here](https://github.com/zanish/Trakt-Community-Ratings/issues) and I will attempt to fix them as soon as possible. If possible please attack an image or provide detailed steps in creating and recreating the issue, thank you.
