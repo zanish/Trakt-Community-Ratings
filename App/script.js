@@ -67,7 +67,7 @@ function parseOMDB(OMResponse) {
   var rottenTomatoesResults = $('#rottenTomatoesResults');
   OMResponse = JSON.parse(OMResponse);
   if (OMResponse.hasOwnProperty('Error')) {
-    rottenTomatoesResults.html('Got error from OMDB: "' + OMResponse.Error + '"');
+    rottenTomatoesResults.html('My apologies OMDB has gone private. I am working on a fix, thank you for your patience.');
   } else {
     if(OMResponse.tomatoURL !== "N/A") {
       rottenTomatoesResults.html("");
