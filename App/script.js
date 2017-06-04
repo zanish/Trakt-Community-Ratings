@@ -50,10 +50,11 @@ function getRTFromImdbId() {
 
   var apiUri = 'http://www.omdbapi.com/?tomatoes=true&i=tt';
   var apiParams = getIMDBid();
+  var apiKeyParam = "&apikey=2355ec92";
 
-  if(apiUri != null)
+  if(apiParams != null)
   {
-    var apiUrl = apiUri + apiParams;
+    var apiUrl = apiUri + apiParams + apiKeyParam;
     chrome.runtime.sendMessage({
       method: 'GET',
       action: 'xhttp',
@@ -90,7 +91,7 @@ function parseOMDB(OMResponse) {
 //Extracts the data from the RT page
 function formatResponse(RTresponse) {
   response = {};
-  console.log(tomatoeUrl);
+  //console.log(tomatoeUrl);
   response.tomatoMeter = $(RTresponse).find('div.critic-score #tomato_meter_link span.meter-value span').html();
   let imageClassStr = $(RTresponse).find('div.critic-score #tomato_meter_link span.meter-tomato')[0].classList;
   if(imageClassStr.contains("certified_fresh")) {
