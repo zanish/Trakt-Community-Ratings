@@ -14,7 +14,6 @@
 .tmeterPanel {
 	margin-top: 10px;
 	margin-bottom: 10px;
-	width: 66.6%;
 	border-right: solid #E0D695 1px;
 	overflow: hidden;
 	float: left;
@@ -42,12 +41,10 @@
 }
 
 .criticPanel {
-	width: 50%;
 	float: right;
 }
 
 .numberPanel {
-	width: 50%;
 	float: left;
 }
 
@@ -65,7 +62,6 @@
 }
 
 .audiencePanel {
-	width: 33.3%;
 	float: right;
 	margin-top: 10px;
 	padding-left: 10px;

@@ -1,0 +1,29 @@
+<div id="rottenTomatoesResults">
+    <div class="col-xs-12">
+        <div class="col-xs-12 col-sm-8 tmeterPanel">
+            <div class="col-xs-6 numberPanel">
+                <div class="rtIcon">
+                    <div class="rtIcon {{criticBadge}}"></div>
+                    <a href="{{tomatoeUrl}}" class="tomatoLink"><span class="scoreSpan">{{criticScore}}</span></a>
+                </div>
+                <div class="col-xs-12 statsPanel">
+                    <div><span class="statsSpan">{{avgCriticRating}}</span></div>
+                    <div><span class="statsSpan">{{criticReivewsCount}}</span></div>
+                    <div><span class="tabbedStatsSpan">{{freshReviewCount}}</span></div>
+                    <div><span class="tabbedStatsSpan">{{rottenReviewCount}}</span></div>
+                </div>
+            </div>
+            <div class="col-xs-6 criticPanel"><span class="consensus">{{consensus}}</span></div>
+        </div>
+        <div class="col-xs-12 col-sm-4 audiencePanel">
+            <div class="rtIcon">
+                <div class="rtIcon {{audiencePopcorn}}"></div>
+                <span class="scoreSpan">{{audienceScore}}</span>
+            </div>
+            <div class="statsPanel">
+                <div><span class="statsSpan">{{avgUserRating}}</span></div>
+                <div><span class="statsSpan">{{userReviewsCount}}</span></div>
+            </div>
+        </div>
+    </div>
+</div>
